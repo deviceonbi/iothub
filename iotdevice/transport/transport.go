@@ -6,9 +6,9 @@ import (
 	"io"
 	"time"
 
-	"github.com/amenzhinsky/iothub/common"
-	"github.com/amenzhinsky/iothub/iotservice"
-	"github.com/amenzhinsky/iothub/logger"
+	"github.com/deviceonbi/iothub/common"
+	"github.com/deviceonbi/iothub/iotservice"
+	"github.com/deviceonbi/iothub/logger"
 )
 
 // Transport interface.

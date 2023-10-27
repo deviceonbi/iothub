@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/amenzhinsky/iothub/iotdevice/iotdevicetest"
-	"github.com/amenzhinsky/iothub/iotdevice/transport/http"
-	"github.com/amenzhinsky/iothub/iotservice"
+	"github.com/deviceonbi/iothub/iotdevice/iotdevicetest"
+	"github.com/deviceonbi/iothub/iotdevice/transport/http"
+	"github.com/deviceonbi/iothub/iotservice"
 )
 
 func newDeviceClient(t *testing.T) *Client {

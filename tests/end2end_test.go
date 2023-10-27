@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/amenzhinsky/iothub/iotdevice"
-	"github.com/amenzhinsky/iothub/iotdevice/transport"
-	"github.com/amenzhinsky/iothub/iotdevice/transport/mqtt"
-	"github.com/amenzhinsky/iothub/iotservice"
+	"github.com/deviceonbi/iothub/iotdevice"
+	"github.com/deviceonbi/iothub/iotdevice/transport"
+	"github.com/deviceonbi/iothub/iotdevice/transport/mqtt"
+	"github.com/deviceonbi/iothub/iotservice"
 )
 
 func TestEnd2End(t *testing.T) {
