@@ -47,6 +47,12 @@ func WithTLSConfig(config *tls.Config) ClientOption {
 	}
 }
 
+func WithOnlySubscribeLatestEvent(onlySubscribeLatestEvent bool) ClientOption {
+	return func(c *Client) {
+		c.onlySubscribeLatestEvent = onlySubscribeLatestEvent
+	}
+}
+
 const userAgent = "iothub-golang-sdk/dev"
 
 func ParseConnectionString(cs string) (*common.SharedAccessKey, error) {
@@ -96,13 +102,14 @@ func New(sak *common.SharedAccessKey, opts ...ClientOption) (*Client, error) {
 
 // Client is IoT Hub service client.
 type Client struct {
-	mu     sync.Mutex
-	tls    *tls.Config
-	conn   *amqp.Conn
-	done   chan struct{}
-	sak    *common.SharedAccessKey
-	logger logger.Logger
-	http   *http.Client // REST client
+	mu                       sync.Mutex
+	tls                      *tls.Config
+	conn                     *amqp.Conn
+	done                     chan struct{}
+	sak                      *common.SharedAccessKey
+	logger                   logger.Logger
+	http                     *http.Client // REST client
+	onlySubscribeLatestEvent bool
 
 	sendMu   sync.Mutex
 	sendSess *amqp.Session
@@ -301,11 +308,14 @@ func (c *Client) SubscribeEvents(ctx context.Context, fn EventHandler) error {
 	}
 	defer eh.Close()
 
+	opts := []eventhub.SubscribeOption{}
+	if c.onlySubscribeLatestEvent {
+		opts = append(opts, eventhub.WithSubscribeSince(time.Now()))
+	}
+
 	return eh.Subscribe(ctx, func(msg *eventhub.Event) error {
 		return fn(&Event{FromAMQPMessage(msg.Message)})
-	},
-		eventhub.WithSubscribeSince(time.Now()),
-	)
+	}, opts...)
 }
 
 // SendOption is a send option.
