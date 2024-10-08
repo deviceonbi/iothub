@@ -24,7 +24,15 @@ func FromAMQPMessage(msg *amqp.Message) *common.Message {
 			m.MessageID = msg.Properties.MessageID.(string)
 		}
 		if msg.Properties.CorrelationID != nil {
-			m.CorrelationID = msg.Properties.CorrelationID.(string)
+			switch v := msg.Properties.CorrelationID.(type) {
+			case string:
+				m.CorrelationID = v
+			case amqp.UUID:
+				m.CorrelationID = v.String()
+			default:
+				// Handle the case where CorrelationID is an unexpected type
+				fmt.Printf("unexpected type for CorrelationID: %T\n", v)
+			}
 		}
 		if msg.Properties.To != nil {
 			m.To = *msg.Properties.To
